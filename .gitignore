@@ -12,6 +12,12 @@ build/
 .env.local
 .env.*.local
 
+# Local API keys and sensitive configs
+mcp-config-local.json
+**/secrets/
+*.key
+*.pem
+
 # IDE
 .vscode/
 .idea/
