@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "ai-model-server": {
+      "command": "node",
+      "args": [
+        "/Users/libao/git/mcp-infrastructure/packages/ai-model-server/dist/index.js"
+      ],
+      "env": {
+        "YUNWU_API_KEY": "your-yunwu-api-key",
+        "YUNWU_BASE_URL": "http://hw.yunwu.ai:3000/v1",
+        "GEMINI_API_KEY": "your-gemini-api-key",
+        "GITHUB_TOKEN": "your-github-token"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "list_models",
+        "call_model"
+      ]
+    }
+  }
+}
