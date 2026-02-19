@@ -1,34 +1,24 @@
 {
-  "name": "mcp-infrastructure",
-  "version": "1.0.0",
+  "name": "infrastructure-skills",
+  "version": "6.0.0",
+  "description": "AI skill library - race optimization, model calling, and more",
+  "type": "module",
   "private": true,
-  "description": "Unified MCP infrastructure for all projects",
-  "workspaces": [
-    "packages/*"
-  ],
   "scripts": {
-    "build": "pnpm -r build",
-    "dev": "pnpm -r --parallel dev",
-    "test": "pnpm -r test",
-    "lint": "pnpm -r lint",
-    "clean": "pnpm -r clean && rm -rf node_modules",
-    "publish:all": "pnpm -r publish"
+    "call": "node lib/ai.js call",
+    "list": "node lib/ai.js list",
+    "race": "node lib/race.js",
+    "test": "node --test test/test-call-model.js test/test-race-optimize.js"
   },
   "keywords": [
-    "mcp",
-    "infrastructure",
     "ai",
-    "automation"
+    "infrastructure",
+    "skills",
+    "race-optimize"
   ],
   "author": "libao",
   "license": "MIT",
-  "devDependencies": {
-    "@types/node": "^20.11.0",
-    "typescript": "^5.3.3",
-    "tsx": "^4.7.0"
-  },
   "engines": {
-    "node": ">=18.0.0",
-    "pnpm": ">=8.0.0"
+    "node": ">=18.0.0"
   }
 }

@@ -1,0 +1,47 @@
+{
+  "claude-opus-4-6": {
+    "name": "claude-opus-4-6",
+    "role": "racer",
+    "description": "Claude Opus 4.6 - 主力赛马选手"
+  },
+  "gpt-5": {
+    "name": "gpt-5.2",
+    "role": "racer",
+    "description": "GPT-5.2 - 主力赛马选手"
+  },
+  "gpt-5-codex": {
+    "name": "gpt-5.2-codex-2026-01-14",
+    "role": "racer",
+    "description": "GPT-5.2 Codex - 主力赛马/代码专精"
+  },
+  "claude-opus-4-5": {
+    "name": "claude-opus-4-5-20251101",
+    "role": "racer",
+    "description": "Claude Opus 4.5 - 主力赛马选手"
+  },
+  "deepseek": {
+    "name": "deepseek-r1",
+    "role": "racer",
+    "description": "DeepSeek R1 - 主力赛马/推理强"
+  },
+  "gpt-5-chat": {
+    "name": "gpt-5.2-chat",
+    "role": "fallback",
+    "description": "GPT-5.2 Chat - 备选（主力阻塞时替补）"
+  },
+  "grok": {
+    "name": "grok-4.1",
+    "role": "fallback",
+    "description": "Grok 4.1 - 备选（主力阻塞时替补）"
+  },
+  "claude-thinking": {
+    "name": "claude-opus-4-6-thinking",
+    "role": "thinking",
+    "description": "Claude Opus 4.6 Thinking - 裁判融合+对抗审查"
+  },
+  "deepseek-search": {
+    "name": "deepseek-r1-searching",
+    "role": "search",
+    "description": "DeepSeek R1 搜索版 - 联网搜索"
+  }
+}
