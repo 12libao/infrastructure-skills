@@ -1,3 +1,8 @@
+---
+name: race-optimize
+description: Use when optimizing code, text, or prompts through multi-model competition. Triggers - race optimize, multi-model optimize, 赛马优化, 竞赛优化
+---
+
 # Race Optimize
 
 Multi-model competitive optimization: N models generate independently, cross-review extracts essences, deep-thinking synthesizes all contributions, adversarial review stress-tests, evidence-based verification confirms improvement.
@@ -35,13 +40,13 @@ Loop until convergence (improvement < 5%) or max rounds reached.
 CLI (simple):
 
 ```bash
-node lib/race.js <file> "<goal>"
+node $HOME/git/infrastructure-skills/lib/race.js <file> "<goal>"
 ```
 
 Programmatic API:
 
 ```javascript
-import { Race } from "./lib/race.js";
+import { Race } from "$HOME/git/infrastructure-skills/lib/race.js";
 const result = await new Race({ target: "sort.py", goal: "faster" }).run();
 ```
 

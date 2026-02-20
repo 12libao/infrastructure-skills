@@ -114,4 +114,23 @@ describe('call-model: integration', { skip: !hasApiKey() ? 'No API key configure
     });
     assert.ok(output.length > 0, 'CLI should produce output');
   });
+
+  it('scenario: health check covers all 9 models', async () => {
+    const ai = new AI();
+    const results = await ai.checkModels();
+
+    assert.equal(results.length, 9, `Expected 9 results, got ${results.length}`);
+    for (const r of results) {
+      assert.ok(r.alias, 'should have alias');
+      assert.equal(typeof r.available, 'boolean', 'available should be boolean');
+      assert.equal(typeof r.latencyMs, 'number', 'latencyMs should be a number');
+    }
+
+    const available = results.filter(r => r.available);
+    console.log(`\n  Health check: ${available.length}/9 models available`);
+    for (const r of results) {
+      console.log(`    ${r.alias.padEnd(20)} ${r.available ? 'OK' : 'FAIL'}  ${r.available ? r.latencyMs + 'ms' : r.error || ''}`);
+    }
+    assert.ok(available.length > 0, 'at least 1 model should be reachable');
+  }, { timeout: 120000 });
 });

@@ -1,26 +1,47 @@
-# Infrastructure Skills
+# Infrastructure Skills — Development Guide
 
-AI skill library providing reusable infrastructure for any project.
+This project provides reusable AI infrastructure: tool skills (race-optimize, call-model) and process skills (TDD, debugging, verification, critical review). Core engineering principles live in `global/CLAUDE.md`.
 
-## Available Skills
+## Install
 
-### 1. Race Optimize
-**Trigger**: "race optimize", "multi-model optimize"
-**Skill file**: `skills/race-optimize/SKILL.md`
-**Usage**: `node lib/race.js <file> "<goal>"`
+```bash
+./install.sh
+```
 
-Multi-model competitive optimization. Multiple AI models generate independently, cross-review extracts essences, deep-thinking judge synthesizes all contributions, adversarial review stress-tests, evidence-based verification confirms improvement.
+One-time setup. Creates symlinks from `~/.claude/` to this project. After install, edits here take effect globally — no re-install needed. Re-run only when adding new skills.
 
-### 2. Call External Model
-**Trigger**: "call external model", "use external model"
-**Skill file**: `skills/call-model/SKILL.md`
-**Usage**: `node lib/ai.js call <model-alias> "<prompt>"`
+## Project Structure
 
-Call any configured AI model through unified API gateway.
+- `lib/ai.js` — AI model API gateway (zero dependencies)
+- `lib/race.js` — Multi-model race optimization engine
+- `config/models.json` — Model aliases and role configuration
+- `config/criteria/` — Scene-specific evaluation criteria templates
+- `.env.local` — API keys (not committed)
+- `skills/` — All skill docs (source of truth, symlinked to `~/.claude/skills/`)
+- `global/CLAUDE.md` — Global engineering principles (symlinked to `~/.claude/CLAUDE.md`)
+- `install.sh` — Symlink installer
+- `test/` — Tests
 
-## Rules
+## Development Rules
 
-- When a trigger keyword is detected, read the corresponding SKILL.md and follow its workflow
-- Model configuration is in `config/models.json`
-- API keys are in `.env.local`
-- All runtime code is in `lib/` (zero dependencies, Node.js >= 18)
+- Runtime code in `lib/` must remain zero-dependency (Node.js >= 18 built-ins only)
+- Run tests before claiming changes work: `node --test test/`
+- Edit skills in `skills/*/SKILL.md` — changes are live via symlinks
+
+## Skills
+
+### Tool Skills
+
+| Skill | Usage |
+|-------|-------|
+| race-optimize | `node $HOME/git/infrastructure-skills/lib/race.js <file> "<goal>"` |
+| call-model | `node $HOME/git/infrastructure-skills/lib/ai.js call <alias> "<prompt>"` |
+
+### Process Skills
+
+| Skill | Triggers on |
+|-------|-------------|
+| tdd | Implementing features or bugfixes |
+| systematic-debugging | Bugs, errors, test failures |
+| verify-before-claim | Before claiming work is complete |
+| critical-review | Receiving feedback or suggestions |

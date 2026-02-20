@@ -1,3 +1,8 @@
+---
+name: call-model
+description: Use when calling an external AI model through the unified API gateway. Triggers - call external model, use external model, 调用外部模型
+---
+
 # Call External Model
 
 Call any configured AI model with a prompt. Zero dependencies, unified API gateway.
@@ -9,7 +14,7 @@ Call any configured AI model with a prompt. Zero dependencies, unified API gatew
 ## Invocation
 
 ```bash
-node lib/ai.js call <model-alias> "<prompt>"
+node $HOME/git/infrastructure-skills/lib/ai.js call <model-alias> "<prompt>"
 ```
 
 ## Available Models
@@ -29,13 +34,13 @@ node lib/ai.js call <model-alias> "<prompt>"
 ## List All Models
 
 ```bash
-node lib/ai.js list
+node $HOME/git/infrastructure-skills/lib/ai.js list
 ```
 
 ## Programmatic API
 
 ```javascript
-import { AI } from "./lib/ai.js";
+import { AI } from "$HOME/git/infrastructure-skills/lib/ai.js";
 const ai = new AI();
 const result = await ai.call("claude-opus-4-6", "Your prompt here");
 console.log(result.content);

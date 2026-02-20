@@ -184,6 +184,55 @@ describe('race-optimize: unit', () => {
     assert.ok(output.includes('Race Optimization'), 'should show title');
     assert.ok(output.includes('code-performance'), 'should mention code-performance scene');
   });
+
+  // --- Convergence detection ---
+
+  it('_hasConverged returns false with < 2 rounds of history', () => {
+    const race = new Race({ target: null, scene: 'text', goal: 'test' });
+    race.history = [{ score: { median: 70 } }];
+    const evidence = { score: { median: 72 } };
+    assert.equal(race._hasConverged(evidence), false);
+  });
+
+  it('_hasConverged returns true when improvement < threshold', () => {
+    const race = new Race({ target: null, scene: 'text', goal: 'test' });
+    race.history = [
+      { score: { median: 70 } },
+      { score: { median: 72 } }
+    ];
+    const evidence = { score: { median: 73 } }; // 1.4% < 5%
+    assert.equal(race._hasConverged(evidence), true);
+  });
+
+  it('_hasConverged returns false when improvement > threshold', () => {
+    const race = new Race({ target: null, scene: 'text', goal: 'test' });
+    race.history = [
+      { score: { median: 60 } },
+      { score: { median: 65 } }
+    ];
+    const evidence = { score: { median: 72 } }; // 10.8% > 5%
+    assert.equal(race._hasConverged(evidence), false);
+  });
+
+  it('_hasConverged returns false when tests failed', () => {
+    const race = new Race({ target: null, scene: 'text', goal: 'test' });
+    race.history = [
+      { score: { median: 70 } },
+      { score: { median: 72 } }
+    ];
+    const evidence = { score: { median: 73 }, tests: { passed: false } };
+    assert.equal(race._hasConverged(evidence), false);
+  });
+
+  it('_hasConverged returns false when converge is disabled', () => {
+    const race = new Race({ target: null, scene: 'text', goal: 'test', converge: false });
+    race.history = [
+      { score: { median: 70 } },
+      { score: { median: 72 } }
+    ];
+    const evidence = { score: { median: 73 } };
+    assert.equal(race._hasConverged(evidence), false);
+  });
 });
 
 // ============================================================================
@@ -205,9 +254,9 @@ describe('race-optimize: integration', { skip: !hasApiKey() ? 'No API key config
     const race = new Race({
       target: fixturePath,
       goal: 'faster execution, use a more efficient sorting algorithm',
-      racers: ['claude-opus', 'claude-opus-4-5'],
-      judge: 'claude-opus',
-      adversary: 'claude-opus',
+      racers: ['claude-opus-4-6', 'claude-opus-4-5'],
+      judge: 'claude-opus-4-6',
+      adversary: 'claude-opus-4-6',
       maxRounds: 1,
       maxTokens: 4000,
       outputDir

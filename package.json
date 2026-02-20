@@ -1,9 +1,16 @@
 {
   "name": "infrastructure-skills",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "description": "AI skill library - race optimization, model calling, and more",
   "type": "module",
-  "private": true,
+  "exports": {
+    ".": "./lib/ai.js",
+    "./race": "./lib/race.js"
+  },
+  "bin": {
+    "ai-call": "./lib/ai.js",
+    "ai-race": "./lib/race.js"
+  },
   "scripts": {
     "call": "node lib/ai.js call",
     "list": "node lib/ai.js list",
