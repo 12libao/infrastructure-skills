@@ -90,6 +90,36 @@ See project's `docs/LIVE_API_TESTING.md` for protocol details and command templa
 | Database persistence | Send message, restart server, load history, verify data survives |
 | Agent loop change | Trigger multi-round tool use, verify correct iteration behavior |
 
+## Non-Deterministic Paths — No Excuses
+
+```
+"NON-DETERMINISTIC" IS NOT A SYNONYM FOR "UNTESTABLE"
+```
+
+When a behavior depends on an LLM decision (e.g., the model choosing to call a specific tool), you MUST still verify it live. Non-determinism means you need persistence, not surrender.
+
+### Protocol
+
+1. **Design high-probability inputs** — Craft prompts that make the target behavior near-certain. Be specific and direct ("在 README 末尾加一行注释" will almost always trigger coding_agent)
+2. **Try multiple times** — If attempt 1 doesn't trigger the path, try a different prompt. Budget at least 3 attempts
+3. **Verify through all available channels** — Don't just read the SSE stream. Also check:
+   - Server logs (`tail` the log file)
+   - Git state (`git branch`, `git log`, `git diff`)
+   - Database records (query messages table)
+   - File system changes
+4. **Report what actually happened** — Show the real output, the git state, the log lines. Not "mock tests cover it"
+
+### Forbidden cop-outs
+
+- "Non-deterministic so can't test" → You can, you're being lazy
+- "Depends on Claude's decision" → Design a prompt that makes the decision obvious
+- "Covered by unit tests" → Unit tests use mocks; mocks prove logic, not integration
+- "Would need Claude to call X" → Then make Claude call X. You control the input
+
+### If genuinely unable to trigger after 3+ attempts
+
+Report honestly: "Attempted 3 prompts: [list]. None triggered coding_agent. Possible cause: [analysis]. Unit/E2E coverage: [list]. Remaining risk: [describe]." This is acceptable. What is NOT acceptable is declaring "can't be tested" without trying.
+
 ## Red Flags — STOP
 
 - Using "should", "probably", "seems to"
@@ -97,6 +127,7 @@ See project's `docs/LIVE_API_TESTING.md` for protocol details and command templa
 - About to commit/push/PR without running tests
 - Relying on previous run results
 - Thinking "just this once"
+- Claiming a path is "untestable" without attempting 3+ targeted inputs
 
 ## Forbidden Phrases
 
@@ -104,6 +135,8 @@ See project's `docs/LIVE_API_TESTING.md` for protocol details and command templa
 - "Should work now"
 - "Looks correct"
 - "I'm confident"
+- "Non-deterministic so can't verify"
+- "Covered by mock tests" (when live verification is required)
 - Any success claim without showing command output
 
 ## The Rule
