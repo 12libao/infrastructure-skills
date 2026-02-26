@@ -89,3 +89,20 @@ Next failing test for next behavior.
 - [ ] Wrote minimal code to pass
 - [ ] All tests pass
 - [ ] Output clean (no warnings/errors)
+
+## Handoff Gate — MANDATORY
+
+```
+TDD IS NOT THE END OF THE WORKFLOW.
+Tests green = code correct. Code correct ≠ feature working.
+```
+
+After the TDD cycle completes, you MUST invoke the `verify-before-claim` skill before claiming completion. This is not optional, not skippable, not "obvious". The handoff is:
+
+1. **TDD done** → all tests green, output clean
+2. **Trigger verify-before-claim** → run the full verification gate
+3. **Only after verify passes** → claim completion to user
+
+Skipping this gate is the #1 cause of "tests pass but feature broken" failures. The verify skill will determine what level of verification is needed (unit-only vs live API) based on the change type.
+
+If you find yourself writing "All done" or "Here's the summary" without having invoked verify-before-claim — STOP. You are about to make an unverified claim.
