@@ -6,7 +6,7 @@
  */
 
 import { execSync } from 'child_process';
-import { existsSync, readFileSync, rmSync } from 'fs';
+import { existsSync, readdirSync, readFileSync, rmSync, statSync } from 'fs';
 import assert from 'node:assert/strict';
 import { after, describe, it } from 'node:test';
 import { tmpdir } from 'os';
@@ -150,10 +150,10 @@ describe('race-optimize: unit', () => {
     assert.equal(race.scene, 'code-performance');
   });
 
-  it('_defaultRacers() returns 5 racer models', () => {
+  it('_defaultRacers() returns 8 racer models', () => {
     const race = new Race({ target: null, scene: 'text' });
     const racers = race._defaultRacers();
-    assert.equal(racers.length, 5, `Expected 5 racers, got ${racers.length}: ${racers.join(', ')}`);
+    assert.equal(racers.length, 8, `Expected 8 racers, got ${racers.length}: ${racers.join(', ')}`);
 
     // Verify all are actually racers
     const config = new Config();
@@ -279,5 +279,23 @@ describe('race-optimize: integration', { skip: !hasApiKey() ? 'No API key config
 
     // Verify output is non-trivial content (models may wrap in markdown)
     assert.ok(result.length > 50, 'output should be substantial (>50 chars)');
+
+    // List all intermediate output files with sizes
+    console.log(`\n  Race output files:`);
+    function listDir(dir, prefix = '') {
+      const entries = readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name));
+      for (const entry of entries) {
+        const fullPath = join(dir, entry.name);
+        if (entry.isDirectory()) {
+          console.log(`    ${prefix}${entry.name}/`);
+          listDir(fullPath, prefix + '  ');
+        } else {
+          const size = statSync(fullPath).size;
+          const sizeStr = size > 1024 ? `${(size / 1024).toFixed(1)} KB` : `${size} B`;
+          console.log(`    ${prefix}${entry.name.padEnd(30)} ${sizeStr}`);
+        }
+      }
+    }
+    listDir(outputDir);
   }, { timeout: 300000 }); // 5 min timeout for full pipeline
 });

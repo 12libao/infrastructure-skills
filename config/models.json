@@ -19,10 +19,25 @@
     "role": "racer",
     "description": "Claude Opus 4.5 - 主力赛马选手"
   },
+  "claude-sonnet-4-6": {
+    "name": "claude-sonnet-4-6",
+    "role": "racer",
+    "description": "Claude Sonnet 4.6 - 主力赛马选手"
+  },
   "deepseek": {
     "name": "deepseek-r1",
     "role": "racer",
     "description": "DeepSeek R1 - 主力赛马/推理强"
+  },
+  "glm-5": {
+    "name": "glm-5",
+    "role": "racer",
+    "description": "GLM-5 - 主力赛马选手"
+  },
+  "gemini-3-pro-preview": {
+    "name": "gemini-3-pro-preview",
+    "role": "racer",
+    "description": "Gemini 3 Pro Preview - 主力赛马选手"
   },
   "gpt-5-chat": {
     "name": "gpt-5.2-chat",

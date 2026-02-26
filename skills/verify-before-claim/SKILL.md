@@ -69,26 +69,59 @@ When in doubt: do the full verification. The cost of a 30-second curl is zero co
 
 For projects with a running server (e.g. Jarvis), unit tests are necessary but NOT sufficient. Before claiming a behavior change works:
 
-1. **Restart** — server must load the new code
-2. **Health check** — confirm version matches what was just built
-3. **Design** — construct a request that triggers the specific change
-4. **Send** — real API call (curl/script), not mock
-5. **Read** — parse the actual response content
-6. **Evaluate** — does the output match the intended behavior change?
-7. **Report** — show the actual output as evidence to the user
+### Step 0: Build Verification Matrix (BEFORE sending any request)
 
-See project's `docs/LIVE_API_TESTING.md` for protocol details and command templates.
+```
+ENUMERATE FIRST, VERIFY SECOND.
+Do not "walk and test." Plan all tests, then execute all tests.
+```
+
+Before any live test, list every affected behavior as a matrix:
+
+```
+Example — auto_merge feature:
+| # | Behavior                          | Input                  | Expected output           |
+|---|-----------------------------------|------------------------|---------------------------|
+| 1 | auto_merge=true, single agent     | coding prompt, am=true | auto_merged=True          |
+| 2 | auto_merge=true, parallel agents  | 2 coding prompts       | both auto_merged=True     |
+| 3 | auto_merge=false, single agent    | coding prompt, am=false| pending_branch present    |
+| 4 | auto_merge=true, merge conflict   | conflicting change     | merge_conflict=True       |
+| 5 | backward compat (no field)        | no auto_merge in body  | defaults to false behavior|
+```
+
+Every row must be tested. Skipping a row = unverified claim on that behavior.
+
+### Step 1: Prepare environment
+
+1. **Rebuild frontend** — `npm run build` (new JS/CSS assets)
+2. **Restart server** — kill old process → start → wait → health check (see project's server management docs)
+3. **Clear browser cache** — PWA Service Worker serves stale assets. Must clear:
+   - Playwright: use fresh context (automatic in E2E)
+   - Real browser: DevTools → Application → Clear site data → Hard refresh
+   - Or instruct user: "请打开 DevTools → Application → Clear site data，然后刷新页面"
+4. **Health check** — confirm correct version
+
+### Step 2-6: Execute matrix
+
+For each row in the verification matrix:
+
+2. **Design** — construct a request that triggers the specific behavior
+3. **Send** — real API call (curl/script), not mock
+4. **Read** — parse the actual response content
+5. **Evaluate** — does the output match the expected column?
+6. **Report** — show the actual output as evidence to the user
 
 ### What to verify per change type
 
 | Change type | Targeted test |
 |-------------|---------------|
-| New API parameter | Send request with the new param, verify it's accepted and affects output |
+| New API parameter | Send request WITH and WITHOUT the param, verify both paths |
 | New tool | Send message that triggers the tool, verify tool_call + tool_result events |
 | SSE event change | Parse the raw SSE stream, verify new event type/fields appear |
-| Frontend toggle/setting | Verify the setting is sent in POST body (capture via server logs or targeted request) |
+| Frontend toggle/setting | Clear site data → refresh → verify toggle appears and sends correct POST body |
 | Database persistence | Send message, restart server, load history, verify data survives |
 | Agent loop change | Trigger multi-round tool use, verify correct iteration behavior |
+| Conditional behavior (A/B) | Test BOTH branches live, not just the new one |
 
 ## Non-Deterministic Paths — No Excuses
 
